@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 
-import { validateEventSchema } from "../util/validation.js";
+import { validateApiKey, validateEventSchema, validateJwtAuth } from "../util/validation.js";
 import { writeErrorResponse } from "../util/errors.js";
 
-import type AuthenticationType from "../types/AuthenticationType.js";
+import AuthenticationType from "../types/AuthenticationType.js";
 import HttpError from "../util/HttpError.js";
 
 import _ from "lodash";
@@ -23,6 +23,26 @@ export async function postEvent(request: Request, response: Response, authentica
     }
 
     validateEventSchema(request.params.id, rawBody);
+
+    switch (authenticationType) {
+      case AuthenticationType.API_KEY: {
+        validateApiKey(request);
+        break;
+      }
+      case AuthenticationType.JWT: {
+        const newJwtIssued = validateJwtAuth(request);
+
+        if (newJwtIssued !== null) {
+          response.setHeader("Authorization", newJwtIssued);
+          response.setHeader("Access-Control-Expose-Headers", "Authorization");
+
+          throw new HttpError(`Unauthorized`, 401);
+        }
+        break;
+      }
+      default:
+        throw new HttpError(`Authentication type set incorrectly.`, 500);
+    }
 
     // Returning a 200 OK response
     response.status(200).json({

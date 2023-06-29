@@ -1,7 +1,15 @@
 import type { EnrichedAnalyticsEvent } from "@wunderbar-network/mini-digital-sdk-js";
 import HttpError from "./HttpError.js";
 
+import type { Request } from "express";
+
 import _ from "lodash";
+
+/** Header API Key param name */
+export const X_API_KEY: string = "X-Api-Key";
+
+/** A JWT token to be returned if one is not present */
+const DUMMY_JWT_TOKEN: string = "FAKE_TOKEN";
 
 /**
  * Parse a JSON payload into a valid `AnalyticsEvent` and validate contents
@@ -87,4 +95,30 @@ function eventFromJson(jsonObject: any): EnrichedAnalyticsEvent {
   };
 
   return event;
+}
+
+/**
+ * Validate than a "valid" JWT token is present for browser-based requests
+ *
+ * @returns `null` if token is present and "valid", a new token otherwise (to be returned with a 401)
+ */
+export function validateJwtAuth(request: Request): string | null {
+  const headerToken: string = request.headers.authorization ?? "";
+
+  if (_.isEmpty(headerToken)) {
+    return DUMMY_JWT_TOKEN;
+  }
+
+  return null;
+}
+
+/**
+ * Validate than an API Key is present for API Key validation
+ */
+export function validateApiKey(request: Request): void {
+  const apiKey: string = request.get(X_API_KEY) ?? "";
+
+  if (_.isEmpty(apiKey)) {
+    throw new HttpError(`${X_API_KEY} is missing from the request.`, 401);
+  }
 }
