@@ -1,4 +1,4 @@
-import type { EnrichedAnalyticsEvent } from "@wunderbar-network/mini-digital-sdk-js";
+import type { EnrichedAnalyticsEvent } from "@wunderbar-network/mini-digital-sdk";
 import HttpError from "./HttpError.js";
 
 import type { Request } from "express";
