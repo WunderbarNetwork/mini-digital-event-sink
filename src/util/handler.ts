@@ -7,6 +7,8 @@ import type { RequestHandler, Request, Response, NextFunction } from "express";
 export function asyncHandler(asyncFunction: (request: Request, response: Response) => Promise<void>): RequestHandler {
   return function (request: Request, response: Response, next: NextFunction): void {
     Promise.resolve(asyncFunction(request, response)).catch((err: any) => {
+      // We know that the asyncFunction won't call `next()` but eslint doesn't
+      // eslint-disable-next-line promise/no-callback-in-promise
       next(err);
     });
   };
@@ -17,7 +19,7 @@ export function asyncHandler(asyncFunction: (request: Request, response: Respons
  */
 export function authenticationTypeHandler(
   handlerFunction: (request: Request, response: Response, authenticationType: AuthenticationType) => void,
-  authenticationType: AuthenticationType
+  authenticationType: AuthenticationType,
 ): RequestHandler {
   return function (request: Request, response: Response, next: NextFunction): void {
     try {
@@ -33,10 +35,12 @@ export function authenticationTypeHandler(
  */
 export function authenticationTypeAsyncHandler(
   asyncFunction: (request: Request, response: Response, authenticationType: AuthenticationType) => Promise<void>,
-  authenticationType: AuthenticationType
+  authenticationType: AuthenticationType,
 ): RequestHandler {
   return function (request: Request, response: Response, next: NextFunction): void {
     Promise.resolve(asyncFunction(request, response, authenticationType)).catch((err: any) => {
+      // We know that the asyncFunction won't call `next()` but eslint doesn't
+      // eslint-disable-next-line promise/no-callback-in-promise
       next(err);
     });
   };

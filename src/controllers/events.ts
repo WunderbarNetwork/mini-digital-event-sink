@@ -61,7 +61,7 @@ export async function postEvent(request: Request, response: Response, authentica
  *
  * Write a 405 (Method Not Allowed) response
  */
-export function methodNotAllowedEvent(request: Request, response: Response, authenticationType: AuthenticationType): void {
+export function methodNotAllowedEvent(request: Request, response: Response): void {
   try {
     response.status(405).json({
       message: "Method Not Allowed",
