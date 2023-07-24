@@ -1,7 +1,7 @@
 {
   "name": "mini-digital-event-sink",
   "version": "1.0.0",
-  "description": "Test endpoint for Mini Digital events",
+  "description": "Local testing server for Mini Digital events",
   "private": false,
   "type": "module",
   "exports": "./src/local.ts",
@@ -39,5 +39,37 @@
     "prettier": "^3.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "engines": {
+    "node": ">=16.0.0, <17.0.0 || >=18.0.0, <19.0.0 || >=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WunderbarNetwork/mini-digital-event-sink.git"
+  },
+  "homepage": "https://github.com/WunderbarNetwork/mini-digital-event-sink#readme",
+  "bugs": {
+    "url": "https://github.com/WunderbarNetwork/mini-digital-event-sink/issues"
+  },
+  "directories": {
+    "dist": "dist"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "contributors": [
+    "Miloš Ranđelović <milos@randelovic.me>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Analytics",
+    "Insights",
+    "Product Analytics",
+    "Event Tracking",
+    "Event Collection",
+    "Mini.Digital",
+    "Tracking Library",
+    "Event Sink",
+    "API Sandbox"
+  ]
 }
