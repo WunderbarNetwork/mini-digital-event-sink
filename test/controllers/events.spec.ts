@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import app from "../../src/app.js";
 import { API_KEY_HEADER, AUTH_PATH_API_KEY, AUTH_PATH_JWT, VALID_API_KEY, VALID_EVENT, getValidJwtToken } from "../util/testUtil.js";
 
-describe(`Testing the reverseProxy capability`, () => {
+describe(`Testing the events controller`, () => {
   it("Returns 200 for a valid event", async () => {
     const apiKeyResponse = await request(app).post(AUTH_PATH_API_KEY).send(VALID_EVENT).set(API_KEY_HEADER, VALID_API_KEY);
     expect(apiKeyResponse.statusCode).toBe(200);
