@@ -11,6 +11,6 @@ eventRoutes.post("/events/jwt/v1/:id", authenticationTypeAsyncHandler(postEvent,
 eventRoutes.all("/events/jwt/v1/:id", methodNotAllowedEvent);
 
 eventRoutes.post("/events/key/v1/:id", authenticationTypeAsyncHandler(postEvent, AuthenticationType.API_KEY));
-eventRoutes.options("/events/key/v1/:id", methodNotAllowedEvent);
+eventRoutes.all("/events/key/v1/:id", methodNotAllowedEvent);
 
 export default eventRoutes;

@@ -5,7 +5,7 @@ import { config } from "dotenv";
 import type { Express, NextFunction, Request, Response } from "express";
 
 import eventRoutes from "./routes/events.js";
-import HttpError from "./util/HttpError.js";
+import HttpError from "./types/HttpError.js";
 
 import { writeErrorResponse } from "./util/errors.js";
 

@@ -4,13 +4,13 @@ import { validateApiKey, validateEventSchema, validateJwtAuth } from "../util/va
 import { writeErrorResponse } from "../util/errors.js";
 
 import AuthenticationType from "../types/AuthenticationType.js";
-import HttpError from "../util/HttpError.js";
+import HttpError from "../types/HttpError.js";
 
 import _ from "lodash";
 
 /**
- * POST /events/jwt/:id (AuthenticationType = JWT)
- * POST /events/key/:id (AuthenticationType = API_KEY)
+ * POST /events/jwt/v1/:id (AuthenticationType = JWT)
+ * POST /events/key/v1/:id (AuthenticationType = API_KEY)
  */
 export async function postEvent(request: Request, response: Response, authenticationType: AuthenticationType): Promise<void> {
   try {
@@ -54,8 +54,8 @@ export async function postEvent(request: Request, response: Response, authentica
 }
 
 /**
- * ALL /events/jwt/:id (AuthenticationType = JWT)
- * ALL /events/key/:id (AuthenticationType = API_KEY)
+ * ALL /events/jwt/v1/:id (AuthenticationType = JWT)
+ * ALL /events/key/v1/:id (AuthenticationType = API_KEY)
  *
  * ALL = (any HTTP Method not explicitly allocated)
  *

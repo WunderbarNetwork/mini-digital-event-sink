@@ -1,5 +1,5 @@
 import type { EnrichedAnalyticsEvent } from "@wunderbar-network/mini-digital-sdk";
-import HttpError from "./HttpError.js";
+import HttpError from "../types/HttpError.js";
 
 import type { Request } from "express";
 
