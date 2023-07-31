@@ -26,3 +26,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# .env file (should always be auto-created from the template)
+.env

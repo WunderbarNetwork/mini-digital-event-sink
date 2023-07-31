@@ -1,5 +1,5 @@
 import type { EnrichedAnalyticsEvent } from "@wunderbar-network/mini-digital-sdk";
-import HttpError from "./HttpError.js";
+import HttpError from "../types/HttpError.js";
 
 import type { Request } from "express";
 
@@ -7,9 +7,6 @@ import _ from "lodash";
 
 /** Header API Key param name */
 export const X_API_KEY: string = "X-Api-Key";
-
-/** A JWT token to be returned if one is not present */
-const DUMMY_JWT_TOKEN: string = "FAKE_TOKEN";
 
 /**
  * Parse a JSON payload into a valid `AnalyticsEvent` and validate contents
@@ -71,6 +68,19 @@ function eventFromJson(jsonObject: any): EnrichedAnalyticsEvent {
       throw new HttpError(`Anonymous user needs to be either 0 or 1.`, 400);
   }
 
+  // Validate the `schemaVersion` property
+  switch (jsonObject.schemaVersion as string) {
+    case "1.0.0":
+      break;
+    default:
+      throw new HttpError(`The provided schema version is not supported.`, 400);
+  }
+
+  // Validate that the timestamp is in the ISO 8601 format
+  if (!isTimestampValid(jsonObject.timestamp as string)) {
+    throw new HttpError("The timestamp should be in ISO 8601 format.", 400);
+  }
+
   // All fields, including optional, are copied over
   const event: EnrichedAnalyticsEvent = {
     eventId: jsonObject.eventId,
@@ -98,18 +108,46 @@ function eventFromJson(jsonObject: any): EnrichedAnalyticsEvent {
 }
 
 /**
- * Validate than a "valid" JWT token is present for browser-based requests
+ * Validate that the timestamp is in the ISO 8601 format
+ */
+function isTimestampValid(timestamp: string): boolean {
+  // ISO 8601 format regex pattern
+  const iso8601Pattern = new RegExp(
+    /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(\.\d{1,3})?(Z|[+-]([01]\d|2[0-3]):([0-5]\d))$/,
+  );
+
+  return iso8601Pattern.test(timestamp);
+}
+
+/**
+ * Validate that a "valid" JWT token is present for browser-based requests
  *
  * @returns `null` if token is present and "valid", a new token otherwise (to be returned with a 401)
  */
 export function validateJwtAuth(request: Request): string | null {
   const headerToken: string = request.headers.authorization ?? "";
 
-  if (_.isEmpty(headerToken)) {
-    return DUMMY_JWT_TOKEN;
+  // Get a new "valid" token
+  const validToken = getValidJwtToken();
+
+  if (_.isEmpty(headerToken) || !_.isEqual(headerToken, validToken)) {
+    return validToken;
   }
 
   return null;
+}
+
+/**
+ * To simulate token expiry, we will dynamically generate a fake token, containing today's date in it.
+ */
+function getValidJwtToken(): string {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  const todayDate = `${year}-${month}-${day}`;
+
+  return `FAKE_JWT_TOKEN_${todayDate}`;
 }
 
 /**

@@ -1,4 +1,4 @@
-import HttpError from "./HttpError.js";
+import HttpError from "../types/HttpError.js";
 import type { Response } from "express";
 
 interface ErrorWithMessage {
